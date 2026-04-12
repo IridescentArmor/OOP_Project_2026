@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Marketplace.API.Models.AdminRole" BaseTypeListCollapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAARAAAAAAAAAAgAAAAAAAAAAAAAAkAAAAAA=</HashCode>
+      <FileName>Models\AdminRole.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.User" BaseTypeListCollapsed="true">
+    <Position X="8.25" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACCAAQAACAAAABAgAAASAQAAwAAAEAAAAADAEAQAAA=</HashCode>
+      <FileName>Models\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_roles" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.CustomerRole" BaseTypeListCollapsed="true">
+    <Position X="3" Y="7.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAEFGAAAAAAAQAAAAAAAAAAAAAQAQEAgAQAA=</HashCode>
+      <FileName>Models\CustomerRole.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_orders" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.Category" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAIQAQAAAAAAAAAAIAAAAAAAAQ=</HashCode>
+      <FileName>Models\Category.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_products" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.Product" BaseTypeListCollapsed="true">
+    <Position X="3" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAgAkABEAIAAIAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Product.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.Order" BaseTypeListCollapsed="true">
+    <Position X="6" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAAACAAAAAABAAiAgAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Order.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.OrderItem" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>MAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\OrderItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Marketplace.API.Models.OrderStatusChangedEventArgs">
+    <Position X="8" Y="0.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\OrderStatusChangedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Marketplace.API.Models.IEntity">
+    <Position X="10.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IEntity.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Marketplace.API.Models.IOrderable">
+    <Position X="10.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IOrderable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Marketplace.API.Models.IRole">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Models\IRole.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Marketplace.API.Models.IUser">
+    <Position X="10.75" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAAAQAACAAAAAAgAAAQAQAAwAAAAAAAAACAEAAAAA=</HashCode>
+      <FileName>Models\IUser.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Marketplace.API.Models.OrderStatus">
+    <Position X="1" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAoAgAAAAAACAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\OrderStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Marketplace.API.Models.UserRoleKind">
+    <Position X="1" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\UserRoleKind.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
