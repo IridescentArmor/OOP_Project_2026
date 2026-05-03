@@ -1,7 +1,9 @@
 using Marketplace.API.DTOs;
+using Marketplace.API.Models;
 using Marketplace.API.Repositories;
 using Marketplace.API.Services;
 using Marketplace.Tests.Helpers;
+using Microsoft.AspNetCore.Identity;
 
 namespace Marketplace.Tests.Services;
 
@@ -12,7 +14,7 @@ public class UserServiceTests
     {
         var (ctx, _) = TestDatabase.CreateContext(runSeed: false);
         var repo = new EfUserRepository(ctx);
-        var sut = new UserService(repo);
+        var sut = new UserService(repo, new EfOrderRepository(ctx), new PasswordHasher<User>());
 
         var req = new CreateUserRequest
         {
@@ -42,7 +44,7 @@ public class UserServiceTests
     {
         var (ctx, _) = TestDatabase.CreateContext(runSeed: false);
         var repo = new EfUserRepository(ctx);
-        var sut = new UserService(repo);
+        var sut = new UserService(repo, new EfOrderRepository(ctx), new PasswordHasher<User>());
 
         var res = sut.Create(new CreateUserRequest
         {

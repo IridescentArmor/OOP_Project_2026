@@ -27,7 +27,10 @@ public class OrderServiceTests
         var result = sut.CreateOrder(new CreateOrderRequest
         {
             UserId = user.Id,
-            Items = new Dictionary<Guid, int> { { product.Id, 1 } }
+            Items = new Dictionary<Guid, int> { { product.Id, 1 } },
+            RecipientName = "Іван Петров",
+            RecipientPhone = "+380501112233",
+            ShippingAddress = "Київ, вул. Хрещатик 1"
         });
 
         Assert.NotEqual(Guid.Empty, result.Id);
@@ -52,7 +55,10 @@ public class OrderServiceTests
         Assert.Throws<InvalidOperationException>(() => sut.CreateOrder(new CreateOrderRequest
         {
             UserId = user.Id,
-            Items = new Dictionary<Guid, int> { { product.Id, 1 } }
+            Items = new Dictionary<Guid, int> { { product.Id, 1 } },
+            RecipientName = "Іван Петров",
+            RecipientPhone = "+380501112233",
+            ShippingAddress = "Київ, вул. Хрещатик 1"
         }));
     }
 }

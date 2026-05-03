@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Marketplace.API.Validation;
 
 namespace Marketplace.API.DTOs;
 
@@ -20,8 +21,9 @@ public class RegisterRequest : IValidatableObject
     public string PhoneNumber { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Пароль обов'язковий")]
-    [MinLength(6, ErrorMessage = "Пароль має містити щонайменше 6 символів")]
+    [MinLength(8, ErrorMessage = "Пароль має містити щонайменше 8 символів")]
     [MaxLength(100, ErrorMessage = "Пароль занадто довгий")]
+    [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d).+$", ErrorMessage = "Пароль має містити літери та цифри")]
     public string Password { get; set; } = string.Empty;
 
     public bool IncludeCustomerRole { get; set; }
@@ -43,5 +45,11 @@ public class RegisterRequest : IValidatableObject
 
         if (IncludeSellerRole && string.IsNullOrWhiteSpace(SellerCompanyName))
             yield return new ValidationResult("Для ролі продавця вкажіть назву компанії", new[] { nameof(SellerCompanyName) });
+
+        if (!ValidationRules.IsValidPersonName(Name))
+            yield return new ValidationResult("Ім'я може містити лише літери, пробіли, апостроф і дефіс", new[] { nameof(Name) });
+
+        if (!ValidationRules.IsValidPhoneNumber(PhoneNumber))
+            yield return new ValidationResult("Вкажіть коректний номер телефону без літер", new[] { nameof(PhoneNumber) });
     }
 }

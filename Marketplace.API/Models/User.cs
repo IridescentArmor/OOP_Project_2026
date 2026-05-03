@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Marketplace.API.Validation;
 
 namespace Marketplace.API.Models;
 
@@ -23,15 +24,24 @@ public class User : IUser
     public string PasswordHash { get; private set; } = null!;
     public DateTime RegistrationDate { get; private set; }
 
+    public bool IsBlocked { get; private set; }
+    public string? BlockReason { get; private set; }
+
+    public int FailedLoginAttempts { get; private set; }
+    public DateTime? LockoutUntilUtc { get; private set; }
+
+    public bool IsLockedOut(DateTime utcNow)
+        => LockoutUntilUtc.HasValue && LockoutUntilUtc.Value > utcNow;
+
     public IReadOnlyList<IRole> Roles => _roles;
 
     public User(Guid id, string name, string email, string phoneNumber, string passwordHash, DateTime registrationDateUtc)
     {
         ValidateIdentity(name, email, phoneNumber, passwordHash);
         Id = id; 
-        Name = name;
-        Email = email;
-        PhoneNumber = phoneNumber?.Trim() ?? string.Empty;
+        Name = name.Trim();
+        Email = email.Trim().ToLowerInvariant();
+        PhoneNumber = ValidationRules.NormalizePhoneNumber(phoneNumber);
         PasswordHash = passwordHash;
         RegistrationDate = registrationDateUtc;
     }
@@ -52,9 +62,19 @@ public class User : IUser
     public bool HasRole<TRole>() where TRole : class, IRole
         => _roles.OfType<TRole>().Any();
 
+    public TRole? GetRole<TRole>() where TRole : class, IRole
+        => _roles.OfType<TRole>().FirstOrDefault();
+
+    public bool RemoveRole<TRole>() where TRole : class, IRole
+    {
+        var before = _roles.Count;
+        _roles.RemoveAll(r => r is TRole);
+        return _roles.Count < before;
+    }
+
     public void ChangeName(string newName)
     {
-        if (string.IsNullOrWhiteSpace(newName) || newName.Length < 2)
+        if (!ValidationRules.IsValidPersonName(newName))
             throw new ArgumentException("Некоректне ім'я");
         Name = newName.Trim();
     }
@@ -68,9 +88,9 @@ public class User : IUser
 
     public void ChangePhoneNumber(string newPhoneNumber)
     {
-        if (string.IsNullOrWhiteSpace(newPhoneNumber) || newPhoneNumber.Length < 7)
+        if (!ValidationRules.IsValidPhoneNumber(newPhoneNumber))
             throw new ArgumentException("Некоректний номер телефону");
-        PhoneNumber = newPhoneNumber.Trim();
+        PhoneNumber = ValidationRules.NormalizePhoneNumber(newPhoneNumber);
     }
 
     public void ChangePasswordHash(string newPasswordHash)
@@ -80,13 +100,50 @@ public class User : IUser
         PasswordHash = newPasswordHash;
     }
 
+    public void Block(string reason)
+    {
+        if (string.IsNullOrWhiteSpace(reason))
+            throw new ArgumentException("Причина блокування обов'язкова");
+
+        IsBlocked = true;
+        BlockReason = reason.Trim();
+    }
+
+    public void Unblock()
+    {
+        IsBlocked = false;
+        BlockReason = null;
+    }
+
+    public void RegisterFailedLoginAttempt(DateTime utcNow, int maxAttempts, TimeSpan lockoutDuration)
+    {
+        if (maxAttempts <= 0)
+            throw new ArgumentOutOfRangeException(nameof(maxAttempts));
+
+        if (lockoutDuration <= TimeSpan.Zero)
+            throw new ArgumentOutOfRangeException(nameof(lockoutDuration));
+
+        FailedLoginAttempts++;
+        if (FailedLoginAttempts >= maxAttempts)
+        {
+            LockoutUntilUtc = utcNow.Add(lockoutDuration);
+            FailedLoginAttempts = 0;
+        }
+    }
+
+    public void RegisterSuccessfulLogin()
+    {
+        FailedLoginAttempts = 0;
+        LockoutUntilUtc = null;
+    }
+
     public static void ValidateIdentity(string name, string email, string phoneNumber, string passwordHash)
     {
-        if (string.IsNullOrWhiteSpace(name) || name.Length < 2)
+        if (!ValidationRules.IsValidPersonName(name))
             throw new ArgumentException("Некоректне ім'я");
         if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
             throw new ArgumentException("Некоректний email");
-        if (string.IsNullOrWhiteSpace(phoneNumber) || phoneNumber.Length < 7)
+        if (!ValidationRules.IsValidPhoneNumber(phoneNumber))
             throw new ArgumentException("Некоректний номер телефону");
         if (string.IsNullOrWhiteSpace(passwordHash))
             throw new ArgumentException("Некоректний пароль");

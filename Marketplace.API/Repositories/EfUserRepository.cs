@@ -68,6 +68,37 @@ public class EfUserRepository : IUserRepository
         _context.SaveChanges();
     }
 
+    public void Update(User user)
+    {
+        if (user == null)
+            throw new ArgumentNullException(nameof(user), "Користувач не може бути порожнім");
+
+        var tracked = _context.Users.Local.FirstOrDefault(u => u.Id == user.Id);
+        if (tracked != null)
+        {
+            _context.Entry(tracked).CurrentValues.SetValues(user);
+        }
+        else
+        {
+            _context.Users.Attach(user);
+            _context.Entry(user).State = EntityState.Modified;
+        }
+        _context.SaveChanges();
+    }
+
+    public void Delete(User user)
+    {
+        if (user == null)
+            throw new ArgumentNullException(nameof(user), "Користувач не може бути порожнім");
+
+        var roles = _context.UserRoleRows.Where(r => r.UserId == user.Id).ToList();
+        if (roles.Count > 0)
+            _context.UserRoleRows.RemoveRange(roles);
+
+        _context.Users.Remove(user);
+        _context.SaveChanges();
+    }
+
     private void HydrateRoles(User user)
     {
         if (user.Roles.Count > 0)
@@ -120,6 +151,7 @@ public class EfUserRepository : IUserRepository
         var name = row.SellerCompanyName ?? throw new InvalidOperationException("У ролі продавця відсутня назва компанії в БД");
         var s = new SellerRole(name);
         s.SetRatingForPersistence(row.SellerRating);
+        s.SetApprovalForPersistence(row.SellerIsApproved);
         return s;
     }
 
@@ -139,6 +171,7 @@ public class EfUserRepository : IUserRepository
                     row.RoleType = "Seller";
                     row.SellerCompanyName = sr.CompanyName;
                     row.SellerRating = sr.Rating;
+                    row.SellerIsApproved = sr.IsApproved;
                     break;
                 case AdminRole ar:
                     row.RoleType = "Admin";

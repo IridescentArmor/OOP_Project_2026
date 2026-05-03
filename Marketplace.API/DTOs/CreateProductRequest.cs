@@ -24,6 +24,9 @@ public class CreateProductRequest : IValidatableObject
 
     public decimal Price { get; set; }
 
+    [MaxLength(500, ErrorMessage = "Посилання на зображення занадто довге")]
+    public string? ImageUrl { get; set; }
+
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (Price <= 0)

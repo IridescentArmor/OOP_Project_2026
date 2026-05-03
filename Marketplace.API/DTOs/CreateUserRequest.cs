@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Marketplace.API.Validation;
 
 namespace Marketplace.API.DTOs;
 
@@ -43,5 +44,11 @@ public class CreateUserRequest : IValidatableObject
 
         if (IncludeSellerRole && string.IsNullOrWhiteSpace(SellerCompanyName))
             yield return new ValidationResult("Для ролі продавця вкажіть назву компанії", new[] { nameof(SellerCompanyName) });
+
+        if (!ValidationRules.IsValidPersonName(Name))
+            yield return new ValidationResult("Ім'я може містити лише літери, пробіли, апостроф і дефіс", new[] { nameof(Name) });
+
+        if (!ValidationRules.IsValidPhoneNumber(PhoneNumber))
+            yield return new ValidationResult("Вкажіть коректний номер телефону без літер", new[] { nameof(PhoneNumber) });
     }
 }

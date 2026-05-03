@@ -11,6 +11,7 @@ public class UserRoleRow
 
     public string? SellerCompanyName { get; set; }
     public double SellerRating { get; set; }
+    public bool SellerIsApproved { get; set; }
 
     public int? AdminAccessLevel { get; set; }
 }

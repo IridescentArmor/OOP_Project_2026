@@ -81,7 +81,10 @@ public class ApiIntegrationTests
         var orderBody = new CreateOrderRequest
         {
             UserId = auth.User.Id,
-            Items = new Dictionary<Guid, int> { { productsRes[0].Id, 1 } }
+            Items = new Dictionary<Guid, int> { { productsRes[0].Id, 1 } },
+            RecipientName = "Іван Петров",
+            RecipientPhone = "+380501112233",
+            ShippingAddress = "Київ, вул. Хрещатик 1"
         };
 
         var orderReq = new HttpRequestMessage(HttpMethod.Post, "/api/orders")

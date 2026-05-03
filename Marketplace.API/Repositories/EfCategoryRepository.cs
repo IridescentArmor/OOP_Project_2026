@@ -26,4 +26,22 @@ public class EfCategoryRepository : ICategoryRepository
         _context.Categories.Add(category);
         _context.SaveChanges();
     }
+
+    public void Update(Category category)
+    {
+        if (category == null)
+            throw new ArgumentNullException(nameof(category), "Категорія не може бути порожньою");
+
+        _context.Categories.Update(category);
+        _context.SaveChanges();
+    }
+
+    public void Delete(Category category)
+    {
+        if (category == null)
+            throw new ArgumentNullException(nameof(category), "Категорія не може бути порожньою");
+
+        _context.Categories.Remove(category);
+        _context.SaveChanges();
+    }
 }
