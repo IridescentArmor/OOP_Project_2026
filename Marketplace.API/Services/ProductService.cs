@@ -8,13 +8,16 @@ public class ProductService : IProductService
 {
     private readonly IProductRepository _productRepository;
     private readonly IReviewRepository _reviewRepository;
+    private readonly IOrderRepository _orderRepository;
 
     public ProductService(
         IProductRepository productRepository,
-        IReviewRepository reviewRepository)
+        IReviewRepository reviewRepository,
+        IOrderRepository orderRepository)
     {
         _productRepository = productRepository;
         _reviewRepository = reviewRepository;
+        _orderRepository = orderRepository;
     }
 
     public IEnumerable<ProductResponse> GetAll()
@@ -85,6 +88,10 @@ public class ProductService : IProductService
 
         if (product.SellerId != sellerUserId)
             throw new InvalidOperationException("Це не ваш товар");
+
+        if (_orderRepository.HasActiveOrdersForProduct(productId))
+            throw new InvalidOperationException("Неможливо видалити товар, який є в активних замовленнях");
+
         _productRepository.Delete(product);
     }
 
@@ -108,6 +115,9 @@ public class ProductService : IProductService
     {
         var product = _productRepository.GetById(productId)
             ?? throw new InvalidOperationException("Товар не знайдено");
+
+        if (_orderRepository.HasActiveOrdersForProduct(productId))
+            throw new InvalidOperationException("Неможливо видалити товар, який є в активних замовленнях");
 
         _productRepository.Delete(product);
     }
